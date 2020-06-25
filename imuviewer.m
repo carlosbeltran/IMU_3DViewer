@@ -7,6 +7,7 @@ clear s; clear all;
 % change this accordingly (tested under Windows)
 serialportname = "COM13";
 baudrate = 9600;
+imu_iscalibrated = 0;
 
 f = figure(1);
 [verts, faces, cindex] = teapotGeometry;
@@ -44,7 +45,7 @@ while(1)
     
     dataline = readline(s);
     dataparts = strsplit(dataline);
-    if dataparts(1) == "Quaternion:"
+    if (dataparts(1) == "Quaternion:") && (imu_iscalibrated == 1) 
         cla;
         q1 = str2double(dataparts(2));
         q2 = str2double(dataparts(3));
@@ -64,7 +65,23 @@ while(1)
         material('dull');
         
     end
-    [q1,q2,q3,q4]
+    %%[q1,q2,q3,q4]
+    
+    if dataparts(1) == "Calibration:"
+     %% Msg: Calibration: 3, 3, 0, 3
+        cal_sys   = str2double(dataparts(2));
+        cal_gyro  = str2double(dataparts(3));
+        cal_accel = str2double(dataparts(4));
+        cal_mag   = str2double(dataparts(5));
+        
+        if (cal_sys == 3)   && (cal_gyro == 3) && ...
+           (cal_accel == 0) && (cal_mag == 3)
+            imu_iscalibrated = 1;
+        end
+        [cal_sys,cal_gyro,cal_accel,cal_mag]
+    end
+    
+    
     
     if ~ishandle(ButtonHandle)
         disp('Loop stopped by user');
