@@ -53,7 +53,7 @@ while(1)
         q4 = str2double(dataparts(5));
         qf = quaternion(q1,q2,q3,q4);
         %%verts2 = rotateframe(qf,verts);
-        fvtemp.vertices = rotateframe(qf,fv.vertices);
+        fvtemp.vertices = rotatepoint(qf,fv.vertices);
         %ax = plotTransforms([0 0 0],[0 0 0 0])
         %%p = patch('Faces',faces,'Vertices',verts2,'FaceVertexCData',cindex,'FaceColor','interp');
         % Add a camera light, and tone down the specular highlighting
